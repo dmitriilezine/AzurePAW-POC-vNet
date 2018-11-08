@@ -36,6 +36,7 @@
     "accountForest1NetworkSubnet": "[concat(parameters('vNetIPSpace'),'.7.0/24')]",
     "accountForest2NetworkSubnet": "[concat(parameters('vNetIPSpace'),'.8.0/24')]",
     "dnsServerNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.10.0/24')]",
+    "sourceClientIP": "127.0.0.1",
 
     "vnetTemplateURL": "[concat(variables('assetLocation'),'/data/vNetDeployment.json')]",
     "nsgTemplateURL": "[concat(variables('assetLocation'),'/data/nsgDeployment.json')]",
@@ -195,7 +196,8 @@
           "accountForest1SubnetId": { "value": "[variables('accountForest1SubnetID')]" },
           "accountForest2NSGName": { "value": "[variables('accountForest2NSGName')]" },
           "accountForest2SubnetName": { "value": "[variables('accountForest2SubnetName')]" },
-          "accountForest2SubnetId": { "value": "[variables('accountForest2SubnetID')]" }
+          "accountForest2SubnetId": { "value": "[variables('accountForest2SubnetID')]" },
+          "sourceClientIP": { "value": "[variables('sourceClientIP')]" }
         }
       }
     },

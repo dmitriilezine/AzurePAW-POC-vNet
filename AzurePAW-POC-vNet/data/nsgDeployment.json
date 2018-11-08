@@ -33,7 +33,8 @@
     "accountForest1SubnetId": { "type": "string" },
     "accountForest2NSGName": { "type": "string" },
     "accountForest2SubnetName": { "type": "string" },
-    "accountForest2SubnetId": { "type": "string" }
+    "accountForest2SubnetId": { "type": "string" },
+    "sourceClientIP": { "type": "string" }
 
   },
   "variables": {
