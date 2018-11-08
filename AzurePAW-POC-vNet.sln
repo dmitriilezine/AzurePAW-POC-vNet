@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "AzurePAW-POC-vNet", "AzurePAW-POC-vNet\AzurePAW-POC-vNet.deployproj", "{82EA37D9-043E-4D43-924C-91C7A5A0C57B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82EA37D9-043E-4D43-924C-91C7A5A0C57B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82EA37D9-043E-4D43-924C-91C7A5A0C57B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82EA37D9-043E-4D43-924C-91C7A5A0C57B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82EA37D9-043E-4D43-924C-91C7A5A0C57B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7FDAED8C-78C2-4D0E-83AD-25E074A11F4E}
+	EndGlobalSection
+EndGlobal
