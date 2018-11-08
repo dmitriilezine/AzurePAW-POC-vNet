@@ -1,8 +1,97 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-  "parameters": {},
-  "variables": {},
-  "resources": [],
+  "parameters": {
+    "vNetIPSpace": {
+      "type": "string",
+      "defaultValue": "10.0",
+      "allowedValues": [
+        "10.0",
+        "10.1",
+        "10.2",
+        "10.3"
+      ],
+      "metadata": {
+        "description": "Specify the IP space for the vNet."
+      }
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "defaultValue": "ADVNET",
+      "metadata": {
+        "description": "Specify the name for the vNet."
+      }
+    }
+
+  },
+  "variables": {
+    "assetLocation": "https://raw.githubusercontent.com/dmitriilezine/AzurePAW-POC-vNet/master/AzurePAW-POC-vNet",
+    "virtualNetworkAddressRange": "[concat(parameters('vNetIPSpace'),'.0.0/16')]",
+    "dnsServerNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.10.0/24')]",
+    "vnetTemplateURL": "[concat(variables('assetLocation'),'/data/vNetDeployment.json')]",
+    "nsgTemplateURL": "[concat(variables('assetLocation'),'/data/nsgDeployment.json')]",
+
+    "deployVNet": "DeployVNet",
+    "deployVNetId": "[concat('Microsoft.Resources/deployments/', variables('deployVNet'))]",
+    "deployNSGs": "DeployNSGs",
+    "deployNSGsId": "[concat('Microsoft.Resources/deployments/', variables('deployNSGs'))]",
+
+    "dnsServerNSGName": "[concat('DNSServerNSG',resourceGroup().name)]",
+    "dnsServerNSGID": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('dnsServerNSGName'))]",
+
+    "virtualNetworkName": "[concat(parameters('virtualNetworkName'),resourceGroup().name)]",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
+    "dnsServerSubnetName": "[concat('DNSServerSubnet',resourceGroup().name)]",
+    "dnsServerSubnetID": "[concat(variables('vnetID'),'/subnets/',variables('dnsServerSubnetName'))]",
+
+    "subnets": [
+      {
+        "name": "[variables('dnsServerSubnetName')]",
+        "properties": {
+          "addressPrefix": "[variables('dnsServerNetworkSubnet')]",
+          "networkSecurityGroup": {
+            "id": "[variables('dnsServerNSGID')]"
+          }
+        }
+      }
+    ]
+  },
+  "resources": [
+    
+    {
+      "name": "[variables('deployNSGs')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": { "uri": "[variables('nsgTemplateURL')]" },
+        "parameters": {
+          "virtualNetworkName": { "value": "[variables('virtualNetworkName')]" },
+          "subnets": { "value": "[ variables('subnets')]" },
+          "vNetID": { "value": "[variables('vnetID')]" },
+          "dnsServerNSGName": { "value": "[variables('dnsServerNSGName')]" },
+          "dnsServerSubnetName": { "value": "[variables('dnsServerSubnetName')]" },
+          "dnsServerSubnetId": { "value": "[variables('dnsServerSubnetID')]" }
+        }
+      }
+    },
+    {
+      "name": "[variables('deployVNet')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[variables('deployNSGsId')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": { "uri": "[variables('vnetTemplateURL')]" },
+        "parameters": {
+          "virtualNetworkName": { "value": "[variables('virtualNetworkName')]" },
+          "subnets": { "value": "[ variables('subnets') ]" },
+          "virtualNetworkAddressRange": { "value": "[variables('virtualNetworkAddressRange')]" }
+        }
+      }
+    }
+  ],
   "outputs": {}
 }

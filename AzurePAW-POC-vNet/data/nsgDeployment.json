@@ -1,0 +1,107 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "virtualNetworkName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the virtual network for this deployment"
+      }
+    },
+    "subnets": { "type": "array" },
+    "vNetID": { "type": "string" },
+    "dnsServerNSGName": { "type": "string" },
+    "dnsServerSubnetName": { "type": "string" },
+    "dnsServerSubnetId": { "type": "string" }
+  },
+  "variables": {
+    "dnsServersubnetrange": "[parameters('subnets')[0].properties.addressPrefix]",
+    "location": "[resourceGroup().location]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('dnsServerNSGName')]",
+      "location": "[variables('location')]",
+      "tags": {
+        "displayName": "DNSServerNSG"
+      },
+      "properties": {
+        "securityRules": [
+          
+          {
+            "name": "allow_RDP",
+            "properties": {
+              "description": "Allow RDP to AD Servers",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "[variables('dnsServersubnetrange')]",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "allow_AD_DNS",
+            "properties": {
+              "description": "Allow AD Communication",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "53",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "[variables('dnsServersubnetrange')]",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "allow_AD_DNS_udp",
+            "properties": {
+              "description": "Allow AD Communication",
+              "protocol": "Udp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "53",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "[variables('dnsServersubnetrange')]",
+              "access": "Allow",
+              "priority": 102,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "deny_AD_Other_TCP",
+            "properties": {
+              "description": "deny remainder of Communications",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "[variables('dnsServersubnetrange')]",
+              "access": "Deny",
+              "priority": 200,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "deny_AD_Other_UDP",
+            "properties": {
+              "description": "deny remainder of Communications",
+              "protocol": "Udp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "[variables('dnsServersubnetrange')]",
+              "access": "Deny",
+              "priority": 201,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
