@@ -44,7 +44,7 @@
     "accountForest2NetworkSubnet": "[concat(parameters('vNetIPSpace'),'.8.0/24')]",
     "dnsServerNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.10.0/24')]",
     "sourceClientIP": "127.0.0.1",
-    "dnsServerIpAddress": "(parameters('serverIPAddress')",
+    "dnsServerIpAddress": "parameters('serverIPAddress')",
 
     "vnetTemplateURL": "[concat(variables('assetLocation'),'/data/vNetDeployment.json')]",
     "nsgTemplateURL": "[concat(variables('assetLocation'),'/data/nsgDeployment.json')]",
