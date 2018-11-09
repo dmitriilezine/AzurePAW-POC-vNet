@@ -21,6 +21,13 @@
       "metadata": {
         "description": "Specify the name for the vNet."
       }
+    },
+    "serverIPAddress": {
+      "type": "string",
+      "defaultValue": "10.0.10.4",
+      "metadata": {
+        "description": "Specify IP addess of the DNS server to be used by vNet"
+      }
     }
 
   },
@@ -37,6 +44,7 @@
     "accountForest2NetworkSubnet": "[concat(parameters('vNetIPSpace'),'.8.0/24')]",
     "dnsServerNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.10.0/24')]",
     "sourceClientIP": "127.0.0.1",
+    "dnsServerIpAddress": "(parameters('serverIPAddress')",
 
     "vnetTemplateURL": "[concat(variables('assetLocation'),'/data/vNetDeployment.json')]",
     "nsgTemplateURL": "[concat(variables('assetLocation'),'/data/nsgDeployment.json')]",
@@ -214,7 +222,8 @@
         "parameters": {
           "virtualNetworkName": { "value": "[variables('virtualNetworkName')]" },
           "subnets": { "value": "[ variables('subnets') ]" },
-          "virtualNetworkAddressRange": { "value": "[variables('virtualNetworkAddressRange')]" }
+          "virtualNetworkAddressRange": { "value": "[variables('virtualNetworkAddressRange')]" },
+          "dnsServerAddress": { "value": [ "[variables('dnsServerIpAddress')]" ] }
         }
       }
     }
