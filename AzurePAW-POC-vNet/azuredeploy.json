@@ -42,7 +42,9 @@
     "adfsProxyNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.6.0/24')]",
     "accountForest1NetworkSubnet": "[concat(parameters('vNetIPSpace'),'.7.0/24')]",
     "accountForest2NetworkSubnet": "[concat(parameters('vNetIPSpace'),'.8.0/24')]",
+    "aadProxyConnectorNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.9.0/24')]",
     "dnsServerNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.10.0/24')]",
+
     "sourceClientIP": "127.0.0.1",
     "dnsServerIpAddress": "[parameters('serverIPAddress')]",
 
@@ -62,6 +64,8 @@
     "feNSGID": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('feNSGName'))]",
     "pawNSGName": "[concat('PAW-NSG',resourceGroup().name)]",
     "pawNSGID": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('pawNSGName'))]",
+    "aadProxyNSGName": "[concat('AADProxy-NSG',resourceGroup().name)]",
+    "aadProxyNSGID": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('aadProxyNSGName'))]",
     "adfsNSGName": "[concat('ADFS-NSG',resourceGroup().name)]",
     "adfsNSGID": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('adfsNSGName'))]",
     "adfsProxyNSGName": "[concat('ADFSProxy-NSG',resourceGroup().name)]",
@@ -81,6 +85,8 @@
     "frontendSubnetID": "[concat(variables('vnetID'),'/subnets/',variables('frontendSubnetName'))]",
     "pawSubnetName": "[concat('pawSubnet',resourceGroup().name)]",
     "pawSubnetID": "[concat(variables('vnetID'),'/subnets/',variables('pawSubnetName'))]",
+    "aadProxySubnetName": "[concat('aadProxySubnet',resourceGroup().name)]",
+    "aadProxySubnetID": "[concat(variables('vnetID'),'/subnets/',variables('aadProxySubnetName'))]",
     "gatewaySubnetName": "GatewaySubnet",
     "gatewaySubnetID": "[concat(variables('vnetID'),'/subnets/',variables('gatewaySubnetName'))]",
     "adfsSubnetName": "adfsSubnet",
@@ -165,6 +171,15 @@
             "id": "[variables('accountForest2NSGID')]"
           }
         }
+      },
+      {
+        "name": "[variables('aadProxySubnetName')]",
+        "properties": {
+          "addressPrefix": "[variables('aadProxyConnectorNetworkSubnet')]",
+          "networkSecurityGroup": {
+            "id": "[variables('aadProxyNSGID')]"
+          }
+        }
       }
     ]
   },
@@ -187,16 +202,19 @@
           "beNSGName": { "value": "[variables('beNSGName')]" },
           "feNSGName": { "value": "[variables('feNSGName')]" },
           "pawNSGName": { "value": "[variables('pawNSGName')]" },
+          "aadProxyNSGName": { "value": "[variables('aadProxyNSGName')]" },
           "adfsNSGName": { "value": "[variables('adfsNSGName')]" },
           "adfsProxyNSGName": { "value": "[variables('adfsProxyNSGName')]" },
           "beSubnetName": { "value": "[variables('backendSubnetName')]" },
           "feSubnetName": { "value": "[variables('frontendSubnetName')]" },
           "pawSubnetName": { "value": "[variables('pawSubnetName')]" },
+          "aadProxySubnetName": { "value": "[variables('aadProxySubnetName')]" },
           "adfsSubnetName": { "value": "[variables('adfsSubnetName')]" },
           "adfsProxySubnetName": { "value": "[variables('adfsProxySubnetName')]" },
           "beSubnetId": { "value": "[variables('backendSubnetID')]" },
           "feSubnetId": { "value": "[variables('frontendSubnetID')]" },
           "pawSubnetId": { "value": "[variables('pawSubnetID')]" },
+          "aadProxySubnetId": { "value": "[variables('aadProxySubnetID')]" },
           "adfsSubnetId": { "value": "[variables('adfsSubnetID')]" },
           "adfsProxySubnetId": { "value": "[variables('adfsProxySubnetID')]" },
           "accountForest1NSGName": { "value": "[variables('accountForest1NSGName')]" },

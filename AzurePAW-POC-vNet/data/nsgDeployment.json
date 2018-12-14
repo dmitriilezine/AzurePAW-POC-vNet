@@ -16,16 +16,19 @@
     "beNSGName": { "type": "string" },
     "feNSGName": { "type": "string" },
     "pawNSGName": { "type": "string" },
+    "aadProxyNSGName": { "type": "string" },
     "adfsNSGName": { "type": "string" },
     "adfsProxyNSGName": { "type": "string" },
     "beSubnetName": { "type": "string" },
     "feSubnetName": { "type": "string" },
     "pawSubnetName": { "type": "string" },
+    "aadProxySubnetName": { "type": "string" },
     "adfsSubnetName": { "type": "string" },
     "adfsProxySubnetName": { "type": "string" },
     "beSubnetId": { "type": "string" },
     "feSubnetId": { "type": "string" },
     "pawSubnetId": { "type": "string" },
+    "aadProxySubnetId": { "type": "string" },
     "adfsSubnetId": { "type": "string" },
     "adfsProxySubnetId": { "type": "string" },
     "accountForest1NSGName": { "type": "string" },
@@ -46,6 +49,7 @@
     "adfsProxySubnetRange": "[parameters('subnets')[5].properties.addressPrefix]",
     "accountForest1SubnetRange": "[parameters('subnets')[6].properties.addressPrefix]",
     "accountForest2SubnetRange": "[parameters('subnets')[7].properties.addressPrefix]",
+    "aadProxySubnetRange": "[parameters('subnets')[8].properties.addressPrefix]",
     "location": "[resourceGroup().location]"
   },
   "resources": [
@@ -626,6 +630,33 @@
               "destinationPortRange": "3389",
               "sourceAddressPrefix": "[variables('feSubnetRange')]",
               "destinationAddressPrefix": "[variables('pawSubnetRange')]",
+              "access": "Allow",
+              "priority": 120,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('aadProxyNSGName')]",
+      "location": "[variables('location')]",
+      "tags": {
+        "displayName": "AAD Proxy Connector Subnet NSG"
+      },
+      "properties": {
+        "securityRules": [
+          {
+            "name": "allow_RDP_from_FrontEnd_to_AAD_Proxy_Servers",
+            "properties": {
+              "description": "Allow RDP to ADD Proxy Servers",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "[variables('feSubnetRange')]",
+              "destinationAddressPrefix": "[variables('aadProxySubnetRange')]",
               "access": "Allow",
               "priority": 120,
               "direction": "Inbound"
