@@ -2,24 +2,81 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "vNetIPSpace": {
-      "type": "string",
-      "defaultValue": "10.0",
-      "allowedValues": [
-        "10.0",
-        "10.1",
-        "10.2",
-        "10.3"
-      ],
-      "metadata": {
-        "description": "Specify the IP space for the vNet."
-      }
-    },
     "virtualNetworkName": {
       "type": "string",
       "defaultValue": "ADVNET",
       "metadata": {
         "description": "Specify the name for the vNet."
+      }
+    },
+    "vNetAddressRange": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/16",
+      "metadata": {
+        "description": "Address range for vNet"
+      }
+    },
+    "BackendSubnet": {
+      "type": "string",
+      "defaultValue": "10.0.1.0/24",
+      "metadata": {
+        "description": "Address range for BE subnet"
+      }
+    },
+    "FrontendSubnet": {
+      "type": "string",
+      "defaultValue": "10.0.2.0/24",
+      "metadata": {
+        "description": "Address range for FE subnet"
+      }
+    },
+    "RDSSubnet": {
+      "type": "string",
+      "defaultValue": "10.0.3.0/24",
+      "metadata": {
+        "description": "Address range for RDS subnet"
+      }
+    },
+    "ADFSSubnet": {
+      "type": "string",
+      "defaultValue": "10.0.5.0/24",
+      "metadata": {
+        "description": "Address range for ADFS subnet"
+      }
+    },
+    "ADFSProxySubnet": {
+      "type": "string",
+      "defaultValue": "10.0.6.0/24",
+      "metadata": {
+        "description": "Address range for ADFS Proxy subnet"
+      }
+    },
+    "AccountForest1Subnet": {
+      "type": "string",
+      "defaultValue": "10.0.7.0/24",
+      "metadata": {
+        "description": "Address range for subnet"
+      }
+    },
+    "AccountForest2Subnet": {
+      "type": "string",
+      "defaultValue": "10.0.8.0/24",
+      "metadata": {
+        "description": "Address range for subnet"
+      }
+    },
+    "AADProxySubnet": {
+      "type": "string",
+      "defaultValue": "10.0.9.0/24",
+      "metadata": {
+        "description": "Address range for AAD Proxy subnet"
+      }
+    },
+    "DNSSubnet": {
+      "type": "string",
+      "defaultValue": "10.0.10.0/24",
+      "metadata": {
+        "description": "Address range for DNS server subnet"
       }
     },
     "serverIPAddress": {
@@ -33,17 +90,16 @@
   },
   "variables": {
     "assetLocation": "https://raw.githubusercontent.com/dmitriilezine/AzurePAW-POC-vNet/master/AzurePAW-POC-vNet",
-    "virtualNetworkAddressRange": "[concat(parameters('vNetIPSpace'),'.0.0/16')]",
-    "backendNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.1.0/24')]",
-    "frontendNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.2.0/24')]",
-    "azurepawNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.3.0/24')]",
-    "gatewayNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.4.0/24')]",
-    "adfsNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.5.0/24')]",
-    "adfsProxyNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.6.0/24')]",
-    "accountForest1NetworkSubnet": "[concat(parameters('vNetIPSpace'),'.7.0/24')]",
-    "accountForest2NetworkSubnet": "[concat(parameters('vNetIPSpace'),'.8.0/24')]",
-    "aadProxyConnectorNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.9.0/24')]",
-    "dnsServerNetworkSubnet": "[concat(parameters('vNetIPSpace'),'.10.0/24')]",
+    "virtualNetworkAddressRange": "[parameters('vNetAddressRange')]",
+    "backendNetworkSubnet": "[parameters('BackendSubnet')]",
+    "frontendNetworkSubnet": "[parameters('FrontendSubnet')]",
+    "azurepawNetworkSubnet": "[parameters('RDSSubnet')]",
+    "adfsNetworkSubnet": "[parameters('ADFSSubnet')]",
+    "adfsProxyNetworkSubnet": "[parameters('ADFSProxySubnet')]",
+    "accountForest1NetworkSubnet": "[parameters('AccountForest1Subnet')]",
+    "accountForest2NetworkSubnet": "[parameters('AccountForest2Subnet')]",
+    "aadProxyConnectorNetworkSubnet": "[parameters('AADProxySubnet')]",
+    "dnsServerNetworkSubnet": "[parameters('DNSSubnet')]",
 
     "sourceClientIP": "127.0.0.1",
     "dnsServerIpAddress": "[parameters('serverIPAddress')]",
@@ -87,8 +143,6 @@
     "pawSubnetID": "[concat(variables('vnetID'),'/subnets/',variables('pawSubnetName'))]",
     "aadProxySubnetName": "[concat('aadProxySubnet',resourceGroup().name)]",
     "aadProxySubnetID": "[concat(variables('vnetID'),'/subnets/',variables('aadProxySubnetName'))]",
-    "gatewaySubnetName": "GatewaySubnet",
-    "gatewaySubnetID": "[concat(variables('vnetID'),'/subnets/',variables('gatewaySubnetName'))]",
     "adfsSubnetName": "adfsSubnet",
     "adfsSubnetID": "[concat(variables('vnetID'),'/subnets/',variables('adfsSubnetName'))]",
     "adfsProxySubnetName": "adfsProxySubnet",
